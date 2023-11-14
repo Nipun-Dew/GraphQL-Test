@@ -1,6 +1,6 @@
-package schema
+package graphql.schema
 
-import persistance.dao.{CommonDAO, PicturesDAO}
+import persistance.dao.CommonDAO
 import persistance.model.{Paper, Picture}
 import sangria.schema._
 
@@ -27,18 +27,19 @@ object SchemaDefinition {
       Field("author", StringType, resolve = _.value.author),
       Field("isbn", StringType, resolve = _.value.isbn)))
 
-  private val Id: Argument[Int] = Argument("id", IntType)
+  private val Id = Argument("id", OptionInputType(IntType))
+  private val PaperId = Argument("paperId", OptionInputType(IntType))
 
   private val QueryType: ObjectType[CommonDAO, Unit] = ObjectType("Query", fields[CommonDAO, Unit](
     Field("picture", ListType(PictureType),
       description = Some("Returns a picture with specific `id`."),
-      arguments = Id :: Nil,
-      resolve = c => c.ctx.loadPicture(c arg Id)),
+      arguments = Id :: PaperId :: Nil,
+      resolve = c => PictureQuery.loadPicture(c, Id, PaperId)),
 
     Field("paper", ListType(PaperType),
       description = Some("Returns a paper with specific `id`."),
-      arguments = Id :: Nil,
-      resolve = c => c.ctx.loadPaper(c arg Id)),
+      arguments = PaperId :: Nil,
+      resolve = c => c.ctx.loadPaper(c.arg(PaperId).get)),
 
     Field("pictures", ListType(PictureType),
       description = Some("Returns a list of all available pictures."),

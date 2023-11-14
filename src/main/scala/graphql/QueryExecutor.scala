@@ -10,14 +10,13 @@ import sangria.ast.Document
 import sangria.execution.{ErrorWithResolver, Executor, QueryAnalysisError}
 import sangria.marshalling.sprayJson._
 import sangria.parser.QueryParser
-import schema.SchemaDefinition.schema
 import spray.json.{JsObject, JsString, JsValue}
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 import scala.util.{Failure, Success}
 
-object GraphQL {
+object QueryExecutor {
 
   def graphQLEndpoint(requestJson: JsValue): Route = {
     val JsObject(fields) = requestJson
