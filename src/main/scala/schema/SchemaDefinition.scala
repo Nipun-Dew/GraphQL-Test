@@ -1,7 +1,7 @@
 package schema
 
-import persistance.dao.PicturesDAO
-import persistance.model.Picture
+import persistance.dao.{CommonDAO, PicturesDAO}
+import persistance.model.{Paper, Picture}
 import sangria.schema._
 
 object SchemaDefinition {
@@ -17,17 +17,36 @@ object SchemaDefinition {
         description = Some("Picture CDN URL"),
         resolve = _.value.url)))
 
+  private val PaperType: ObjectType[Unit, Paper] = ObjectType(
+    "Paper",
+    "The product paper",
+
+    fields[Unit, Paper](
+      Field("id", IntType, resolve = _.value.id),
+      Field("pictureId", IntType, resolve = _.value.pictureId),
+      Field("author", StringType, resolve = _.value.author),
+      Field("isbn", StringType, resolve = _.value.isbn)))
+
   private val Id: Argument[Int] = Argument("id", IntType)
 
-  private val QueryType: ObjectType[PicturesDAO, Unit] = ObjectType("Query", fields[PicturesDAO, Unit](
+  private val QueryType: ObjectType[CommonDAO, Unit] = ObjectType("Query", fields[CommonDAO, Unit](
     Field("picture", ListType(PictureType),
       description = Some("Returns a picture with specific `id`."),
       arguments = Id :: Nil,
-      resolve = c => c.ctx.load(c arg Id)),
+      resolve = c => c.ctx.loadPicture(c arg Id)),
+
+    Field("paper", ListType(PaperType),
+      description = Some("Returns a paper with specific `id`."),
+      arguments = Id :: Nil,
+      resolve = c => c.ctx.loadPaper(c arg Id)),
 
     Field("pictures", ListType(PictureType),
       description = Some("Returns a list of all available pictures."),
-      resolve = _.ctx.loadAll)))
+      resolve = _.ctx.loadAllPictures),
 
-  val schema: Schema[PicturesDAO, Unit] = Schema(QueryType)
+    Field("papers", ListType(PaperType),
+      description = Some("Returns a list of all available papers."),
+      resolve = _.ctx.loadAllPapers)))
+
+  val schema: Schema[CommonDAO, Unit] = Schema(QueryType)
 }

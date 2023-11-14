@@ -5,7 +5,7 @@ import akka.http.scaladsl.model.StatusCode
 import akka.http.scaladsl.model.StatusCodes.{BadRequest, InternalServerError, OK}
 import akka.http.scaladsl.server.Directives.complete
 import akka.http.scaladsl.server.Route
-import persistance.dao.PicturesDAO
+import persistance.dao.CommonDAO
 import sangria.ast.Document
 import sangria.execution.{ErrorWithResolver, Executor, QueryAnalysisError}
 import sangria.marshalling.sprayJson._
@@ -46,8 +46,7 @@ object GraphQL {
   }
 
   private def executeGraphQLQuery(query: Document, op: Option[String], vars: JsObject): Future[(StatusCode, JsValue)] = {
-    println(op)
-    Executor.execute(schema, query, new PicturesDAO, variables = vars, operationName = op)
+    Executor.execute(schema, query, new CommonDAO, variables = vars, operationName = op)
       .map(OK -> _)
       .recover {
         case error: QueryAnalysisError => BadRequest -> error.resolveError
