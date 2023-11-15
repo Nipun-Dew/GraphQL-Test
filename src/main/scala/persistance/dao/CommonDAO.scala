@@ -1,3 +1,8 @@
 package persistance.dao
 
-class CommonDAO extends PapersDAO with PicturesDAO
+class CommonDAO {
+
+  val papersDAO = new PapersDAO()
+
+  val picturesDAO = new PicturesDAO()
+}

@@ -39,15 +39,15 @@ object SchemaDefinition {
     Field("paper", ListType(PaperType),
       description = Some("Returns a paper with specific `id`."),
       arguments = PaperId :: Nil,
-      resolve = c => c.ctx.loadPaper(c.arg(PaperId).get)),
+      resolve = c => c.ctx.papersDAO.load(c.arg(PaperId).get)),
 
     Field("pictures", ListType(PictureType),
       description = Some("Returns a list of all available pictures."),
-      resolve = _.ctx.loadAllPictures),
+      resolve = _.ctx.picturesDAO.loadAll),
 
     Field("papers", ListType(PaperType),
       description = Some("Returns a list of all available papers."),
-      resolve = _.ctx.loadAllPapers)))
+      resolve = _.ctx.papersDAO.loadAll)))
 
   val schema: Schema[CommonDAO, Unit] = Schema(QueryType)
 }

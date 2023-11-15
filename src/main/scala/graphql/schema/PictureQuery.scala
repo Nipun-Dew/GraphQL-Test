@@ -13,9 +13,9 @@ object PictureQuery {
                  paperId: Argument[Option[Int]]): Future[List[Picture]] = {
 
    if (ctx.args.argOpt(id.name).isDefined) {
-     ctx.ctx.loadPicture(ctx.arg(id).get)
+     ctx.ctx.picturesDAO.load(ctx.arg(id).get)
    } else if (ctx.args.argOpt(paperId.name).isDefined) {
-     ctx.ctx.loadPictureByPaperId(ctx.arg(paperId).get)
+     ctx.ctx.papersDAO.loadByPaperId(ctx.arg(paperId).get)
    } else {
      Future(List())
    }
