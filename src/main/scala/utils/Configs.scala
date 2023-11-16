@@ -5,7 +5,7 @@ import com.typesafe.config.ConfigFactory
 trait Configs {
   private val conf = ConfigFactory.load()
 
-  val PORT: Int = conf.getInt("port")
-  val HOST: String = conf.getString("host")
+  val PORT: Int = conf.getInt("http.port")
+  val HOST: String = conf.getString("http.host")
 
 }

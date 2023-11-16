@@ -5,27 +5,19 @@ import persistance.model.{Paper, Picture}
 import sangria.schema._
 
 object SchemaDefinition {
-  private val PictureType: ObjectType[Unit, Picture] = ObjectType(
-    "Picture",
-    "The product picture",
+  private val PictureType: ObjectType[Unit, Picture] = ObjectType("Picture", fields[Unit, Picture](
+    Field("id", IntType, resolve = _.value.id),
+    Field("width", IntType, resolve = _.value.width),
+    Field("height", IntType, resolve = _.value.height),
+    Field("url", OptionType(StringType),
+      description = Some("Picture CDN URL"),
+      resolve = _.value.url)))
 
-    fields[Unit, Picture](
-      Field("id", IntType, resolve = _.value.id),
-      Field("width", IntType, resolve = _.value.width),
-      Field("height", IntType, resolve = _.value.height),
-      Field("url", OptionType(StringType),
-        description = Some("Picture CDN URL"),
-        resolve = _.value.url)))
-
-  private val PaperType: ObjectType[Unit, Paper] = ObjectType(
-    "Paper",
-    "The product paper",
-
-    fields[Unit, Paper](
-      Field("id", IntType, resolve = _.value.id),
-      Field("pictureId", IntType, resolve = _.value.pictureId),
-      Field("author", StringType, resolve = _.value.author),
-      Field("isbn", StringType, resolve = _.value.isbn)))
+  private val PaperType: ObjectType[Unit, Paper] = ObjectType("Paper", fields[Unit, Paper](
+    Field("id", IntType, resolve = _.value.id),
+    Field("pictureId", IntType, resolve = _.value.pictureId),
+    Field("author", StringType, resolve = _.value.author),
+    Field("isbn", StringType, resolve = _.value.isbn)))
 
   private val Id = Argument("id", OptionInputType(IntType))
   private val PaperId = Argument("paperId", OptionInputType(IntType))

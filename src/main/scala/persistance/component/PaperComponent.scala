@@ -1,6 +1,6 @@
 package persistance.component
 
-import persistance.model.{Paper, Picture}
+import persistance.model.Paper
 import slick.lifted.ProvenShape
 
 trait PaperComponent {
