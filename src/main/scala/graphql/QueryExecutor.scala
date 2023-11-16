@@ -5,6 +5,7 @@ import akka.http.scaladsl.model.StatusCode
 import akka.http.scaladsl.model.StatusCodes.{BadRequest, InternalServerError, OK}
 import akka.http.scaladsl.server.Directives.complete
 import akka.http.scaladsl.server.Route
+import graphql.schema.SchemaDefinition.schema
 import persistance.dao.CommonDAO
 import sangria.ast.Document
 import sangria.execution.{ErrorWithResolver, Executor, QueryAnalysisError}
